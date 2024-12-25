@@ -111,7 +111,6 @@ services:
       - "9090:9090"
     networks:
       - monitoring
-      - plex
 
   # Node Exporter
   node-exporter:
@@ -151,118 +150,14 @@ services:
     networks:
       - monitoring
 
-
-  ##### Plex Suite #####
-
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - VERSION=docker
-      - PLEX_CLAIM= #optional
-    volumes:
-      - ./plex/library:/config
-      - /mnt/omv/medias/Series/:/tv
-      - /mnt/omv/medias/Films/:/movies
-      - /mnt/omv/medias/Mangas/:/mangas
-      - /mnt/omv/medias/Musique/:/music
-    ports:
-      - "32400:32400"
-    restart: unless-stopped
-    networks:
-      - plex
-
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ./prowlarr:/config
-    ports:
-      - "9696:9696"
-    restart: unless-stopped
-    networks:
-      - plex
-
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ./radarr:/config
-      - /mnt/omv/medias/Films/:/movies #optional
-      - /mnt/omv/medias/Downloads:/downloads #optional
-    ports:
-      - "7878:7878"
-    restart: unless-stopped
-    networks:
-      - plex
-
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ./sonarr:/config
-      - /mnt/omv/medias/Series/:/series #optional
-      - /mnt/omv/medias/Downloads:/downloads #optional
-    ports:
-      - "8989:8989"
-    restart: unless-stopped
-    networks:
-      - plex
-
-  transmission:
-    image: lscr.io/linuxserver/transmission:latest
-    container_name: transmission
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-#      - TRANSMISSION_WEB_HOME= #optional
-#      - USER= #optional
-#      - PASS= #optional
-#      - WHITELIST= #optional
-#      - PEERPORT= #optional
-#      - HOST_WHITELIST= #optional
-    volumes:
-      - ./transmission/data:/config
-      - /mnt/omv/medias/Downloads:/downloads
-      - ./transmission/watch:/watch
-    ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
-    restart: unless-stopped
-    networks:
-      - plex
-
 volumes:
   mongodb:
   opensearch:
   graylog_data:
   graylog_journal:
   prometheus:
-  prowlarr:
-  radarr:
-  sonarr:
-  lidarr:
   grafana:
 
 networks:
   monitoring:
-    driver: bridge
-  plex:
     driver: bridge
