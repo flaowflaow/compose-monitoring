@@ -77,7 +77,6 @@ services:
     restart: on-failure
     networks:
       - monitoring
-      - plex
 
   # Grafana
   grafana:
@@ -130,7 +129,6 @@ services:
       - "9100:9100"
     networks:
       - monitoring
-      - plex
 
   # cAdvisor
   cadvisor:
